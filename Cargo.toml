@@ -1,0 +1,25 @@
+[package]
+name = "list"
+version = "1.0.0"
+edition = "2021"
+
+[dev-dependencies]
+criterion = "0.5.1"
+smallvec = "1.13.1"
+tinyvec = { version = "1.6.0", features = ["alloc"] }
+
+[[bench]]
+name = "smallvec"
+harness = false
+
+[[bench]]
+name = "tinyvec"
+harness = false
+
+[[bench]]
+name = "fixed"
+harness = false
+
+[[bench]]
+name = "resizable"
+harness = false
