@@ -257,15 +257,22 @@ impl<T, const N: usize> Extend<T> for Resizable<T, N> {
 	}
 }
 
+impl<T, const N: usize> FromIterator<T> for Resizable<T, N> {
+	#[inline]
+	fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
+		let mut result = Self::new();
+
+		result.extend(iter);
+
+		result
+	}
+}
+
 impl<T: Clone, const N: usize> Clone for Resizable<T, N> {
 	#[inline]
 	fn clone(&self) -> Self {
 		if self.len() < N {
-			let mut list = Fixed::new();
-
-			list.extend(self.as_slice().iter().cloned());
-
-			Self::Fixed(list)
+			Self::Fixed(self.as_slice().iter().cloned().collect())
 		} else {
 			Self::Heap(self.as_slice().to_vec())
 		}

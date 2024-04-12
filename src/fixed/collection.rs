@@ -244,14 +244,21 @@ impl<T, const N: usize> Extend<T> for Fixed<T, N> {
 	}
 }
 
+impl<T, const N: usize> FromIterator<T> for Fixed<T, N> {
+	#[inline]
+	fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
+		let mut result = Self::new();
+
+		result.extend(iter);
+
+		result
+	}
+}
+
 impl<T: Clone, const N: usize> Clone for Fixed<T, N> {
 	#[inline]
 	fn clone(&self) -> Self {
-		let mut result = Self::new();
-
-		result.extend(self.iter().cloned());
-
-		result
+		self.iter().cloned().collect()
 	}
 }
 
