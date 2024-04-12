@@ -3,9 +3,9 @@ use core::{iter::FusedIterator, mem::MaybeUninit};
 /// A by-value short array iterator.
 /// Needed until [`std::array::IntoIter::new_unchecked`] is stabilized.
 pub struct IntoIter<T, const N: usize> {
-	inner: [MaybeUninit<T>; N],
 	start: u8,
 	end: u8,
+	inner: [MaybeUninit<T>; N],
 }
 
 impl<T, const N: usize> IntoIter<T, N> {
@@ -26,7 +26,7 @@ impl<T, const N: usize> IntoIter<T, N> {
 
 		assert!(N <= u8::MAX as usize, "`Fixed` capacity exceeds `u8`");
 
-		Self { inner, start, end }
+		Self { start, end, inner }
 	}
 }
 

@@ -6,8 +6,8 @@ use super::into_iter::IntoIter;
 
 /// A contiguous fixed-size list of elements of type `T`.
 pub struct Fixed<T, const N: usize> {
-	inner: [MaybeUninit<T>; N],
 	len: u8,
+	inner: [MaybeUninit<T>; N],
 }
 
 impl<T, const N: usize> Fixed<T, N> {
@@ -200,7 +200,7 @@ impl<T, const N: usize> Fixed<T, N> {
 	/// `len` must be a valid length for the initialized part of the array.
 	#[inline]
 	pub const unsafe fn from_raw_parts(inner: [MaybeUninit<T>; N], len: u8) -> Self {
-		Self { inner, len }
+		Self { len, inner }
 	}
 
 	/// Decomposes a `Fixed<T, N>` into its raw components.
