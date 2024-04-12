@@ -1,3 +1,5 @@
+use alloc::boxed::Box;
+
 use crate::resizable::Resizable;
 
 #[test]

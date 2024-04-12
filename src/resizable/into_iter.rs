@@ -1,4 +1,4 @@
-use std::iter::FusedIterator;
+use core::iter::FusedIterator;
 
 macro_rules! impl_mirrored {
 	($item:expr, $list:pat => $apply:expr) => {
@@ -12,7 +12,7 @@ macro_rules! impl_mirrored {
 /// An iterator that moves out of a list.
 pub enum IntoIter<T, const N: usize> {
 	Fixed(crate::fixed::IntoIter<T, N>),
-	Heap(std::vec::IntoIter<T>),
+	Heap(alloc::vec::IntoIter<T>),
 }
 
 // We have explicit implementations for each method that could be a bottleneck

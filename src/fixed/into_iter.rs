@@ -1,4 +1,4 @@
-use std::{iter::FusedIterator, mem::MaybeUninit};
+use core::{iter::FusedIterator, mem::MaybeUninit};
 
 /// A by-value short array iterator.
 /// Needed until [`std::array::IntoIter::new_unchecked`] is stabilized.
@@ -52,7 +52,7 @@ impl<T, const N: usize> Iterator for IntoIter<T, N> {
 
 		if len > N {
 			// SAFETY: `len` is always a valid length for the array.
-			unsafe { std::hint::unreachable_unchecked() };
+			unsafe { core::hint::unreachable_unchecked() };
 		}
 
 		(len, Some(len))

@@ -1,4 +1,6 @@
-use std::ops::{Deref, DerefMut};
+use core::ops::{Deref, DerefMut};
+
+use alloc::vec::Vec;
 
 use crate::fixed::Fixed;
 
@@ -45,7 +47,7 @@ impl<T, const N: usize> Resizable<T, N> {
 		match self {
 			Self::Fixed(list) => {
 				if list.capacity() - list.len() < additional {
-					let list = std::mem::take(list).to_vec_reserve(additional);
+					let list = core::mem::take(list).to_vec_reserve(additional);
 
 					*self = Self::Heap(list);
 				}
@@ -61,7 +63,7 @@ impl<T, const N: usize> Resizable<T, N> {
 		match self {
 			Self::Fixed(list) => {
 				if list.capacity() - list.len() < additional {
-					let list = std::mem::take(list).to_vec_reserve(additional);
+					let list = core::mem::take(list).to_vec_reserve(additional);
 
 					*self = Self::Heap(list);
 				}
@@ -136,7 +138,7 @@ impl<T, const N: usize> Resizable<T, N> {
 			value: T,
 		) -> Resizable<T, N> {
 			let len = list.len();
-			let mut heap = std::mem::take(list).to_vec_reserve(len);
+			let mut heap = core::mem::take(list).to_vec_reserve(len);
 
 			heap.insert(index, value);
 
@@ -159,7 +161,7 @@ impl<T, const N: usize> Resizable<T, N> {
 		#[cold]
 		fn heap_push<T, const N: usize>(list: &mut Fixed<T, N>, value: T) -> Resizable<T, N> {
 			let len = list.len();
-			let mut heap = std::mem::take(list).to_vec_reserve(len);
+			let mut heap = core::mem::take(list).to_vec_reserve(len);
 
 			heap.push(value);
 
@@ -293,8 +295,8 @@ impl<T, const N: usize> DerefMut for Resizable<T, N> {
 	}
 }
 
-impl<T: std::fmt::Debug, const N: usize> std::fmt::Debug for Resizable<T, N> {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl<T: core::fmt::Debug, const N: usize> core::fmt::Debug for Resizable<T, N> {
+	fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
 		self.as_slice().fmt(f)
 	}
 }

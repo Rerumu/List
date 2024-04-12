@@ -1,4 +1,6 @@
-use std::mem::MaybeUninit;
+use core::mem::MaybeUninit;
+
+use alloc::vec::Vec;
 
 use super::into_iter::IntoIter;
 
@@ -40,7 +42,7 @@ impl<T, const N: usize> Fixed<T, N> {
 
 		if len > self.capacity() {
 			// SAFETY: `len` is always a valid length for the array.
-			unsafe { std::hint::unreachable_unchecked() };
+			unsafe { core::hint::unreachable_unchecked() };
 		}
 
 		len
@@ -72,7 +74,7 @@ impl<T, const N: usize> Fixed<T, N> {
 	#[must_use]
 	pub const fn as_slice(&self) -> &[T] {
 		// SAFETY: `self.len` is always a valid length for the array.
-		unsafe { std::slice::from_raw_parts(self.as_ptr(), self.len()) }
+		unsafe { core::slice::from_raw_parts(self.as_ptr(), self.len()) }
 	}
 
 	/// Extracts a mutable slice of the entire list.
@@ -80,13 +82,13 @@ impl<T, const N: usize> Fixed<T, N> {
 	#[must_use]
 	pub fn as_mut_slice(&mut self) -> &mut [T] {
 		// SAFETY: `self.len` is always a valid length for the array.
-		unsafe { std::slice::from_raw_parts_mut(self.as_mut_ptr(), self.len()) }
+		unsafe { core::slice::from_raw_parts_mut(self.as_mut_ptr(), self.len()) }
 	}
 
 	/// Clears the list, removing all values.
 	#[inline]
 	pub fn clear(&mut self) {
-		let slice: *mut [T] = std::ptr::slice_from_raw_parts_mut(self.as_mut_ptr(), self.len());
+		let slice: *mut [T] = core::ptr::slice_from_raw_parts_mut(self.as_mut_ptr(), self.len());
 
 		self.len = 0;
 
@@ -173,7 +175,7 @@ impl<T, const N: usize> Fixed<T, N> {
 		if index <= last {
 			let start = self.inner.as_mut_ptr();
 
-			unsafe { std::ptr::swap(start.add(index), start.add(last)) };
+			unsafe { core::ptr::swap(start.add(index), start.add(last)) };
 
 			self.try_remove(last)
 		} else {
@@ -204,10 +206,10 @@ impl<T, const N: usize> Fixed<T, N> {
 	/// Decomposes a `Fixed<T, N>` into its raw components.
 	#[inline]
 	pub fn into_raw_parts(mut self) -> ([MaybeUninit<T>; N], u8) {
-		let inner = std::mem::replace(&mut self.inner, unsafe {
+		let inner = core::mem::replace(&mut self.inner, unsafe {
 			MaybeUninit::uninit().assume_init()
 		});
-		let len = std::mem::take(&mut self.len);
+		let len = core::mem::take(&mut self.len);
 
 		(inner, len)
 	}
@@ -260,7 +262,7 @@ impl<T, const N: usize> Drop for Fixed<T, N> {
 	}
 }
 
-impl<T, const N: usize> std::ops::Deref for Fixed<T, N> {
+impl<T, const N: usize> core::ops::Deref for Fixed<T, N> {
 	type Target = [T];
 
 	#[inline]
@@ -269,15 +271,15 @@ impl<T, const N: usize> std::ops::Deref for Fixed<T, N> {
 	}
 }
 
-impl<T, const N: usize> std::ops::DerefMut for Fixed<T, N> {
+impl<T, const N: usize> core::ops::DerefMut for Fixed<T, N> {
 	#[inline]
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		self.as_mut_slice()
 	}
 }
 
-impl<T: std::fmt::Debug, const N: usize> std::fmt::Debug for Fixed<T, N> {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl<T: core::fmt::Debug, const N: usize> core::fmt::Debug for Fixed<T, N> {
+	fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
 		self.as_slice().fmt(f)
 	}
 }
