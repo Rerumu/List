@@ -228,6 +228,26 @@ impl<T, const N: usize> IntoIterator for Fixed<T, N> {
 	}
 }
 
+impl<'a, T, const N: usize> IntoIterator for &'a Fixed<T, N> {
+	type Item = &'a T;
+	type IntoIter = core::slice::Iter<'a, T>;
+
+	#[inline]
+	fn into_iter(self) -> Self::IntoIter {
+		self.as_slice().iter()
+	}
+}
+
+impl<'a, T, const N: usize> IntoIterator for &'a mut Fixed<T, N> {
+	type Item = &'a mut T;
+	type IntoIter = core::slice::IterMut<'a, T>;
+
+	#[inline]
+	fn into_iter(self) -> Self::IntoIter {
+		self.as_mut_slice().iter_mut()
+	}
+}
+
 impl<T, const N: usize> Default for Fixed<T, N> {
 	#[inline]
 	fn default() -> Self {

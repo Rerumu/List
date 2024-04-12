@@ -239,6 +239,26 @@ impl<T, const N: usize> IntoIterator for Resizable<T, N> {
 	}
 }
 
+impl<'a, T, const N: usize> IntoIterator for &'a Resizable<T, N> {
+	type IntoIter = core::slice::Iter<'a, T>;
+	type Item = &'a T;
+
+	#[inline]
+	fn into_iter(self) -> Self::IntoIter {
+		self.as_slice().iter()
+	}
+}
+
+impl<'a, T, const N: usize> IntoIterator for &'a mut Resizable<T, N> {
+	type IntoIter = core::slice::IterMut<'a, T>;
+	type Item = &'a mut T;
+
+	#[inline]
+	fn into_iter(self) -> Self::IntoIter {
+		self.as_mut_slice().iter_mut()
+	}
+}
+
 impl<T, const N: usize> Default for Resizable<T, N> {
 	#[inline]
 	fn default() -> Self {
