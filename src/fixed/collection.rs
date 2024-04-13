@@ -213,6 +213,48 @@ impl<T, const N: usize> Fixed<T, N> {
 
 		(inner, len)
 	}
+
+	/// Retains only the elements specified by the predicate.
+	pub fn retain(&mut self, mut f: impl FnMut(&T) -> bool) {
+		self.retain_mut(|item| f(item));
+	}
+
+	/// Retains only the elements specified by the predicate, passing a mutable reference to it.
+	pub fn retain_mut(&mut self, mut f: impl FnMut(&mut T) -> bool) {
+		struct Guard<'a, T, const N: usize> {
+			iter: IntoIter<T, N>,
+			list: &'a mut Fixed<T, N>,
+		}
+
+		impl<'a, T, const N: usize> Drop for Guard<'a, T, N> {
+			fn drop(&mut self) {
+				for item in self.iter.by_ref() {
+					// SAFETY: Both arrays have the same capacity.
+					unsafe { self.list.try_push(item).unwrap_unchecked() };
+				}
+			}
+		}
+
+		let mut guard = Guard {
+			iter: core::mem::take(self).into_iter(),
+			list: self,
+		};
+
+		for item in guard.iter.by_ref() {
+			let list = &mut *guard.list;
+
+			// SAFETY: Both arrays have the same capacity.
+			unsafe {
+				list.try_push(item).unwrap_unchecked();
+
+				if !f(list.last_mut().unwrap_unchecked()) {
+					list.try_pop().unwrap_unchecked();
+				}
+			}
+		}
+
+		drop(guard);
+	}
 }
 
 impl<T, const N: usize> IntoIterator for Fixed<T, N> {

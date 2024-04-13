@@ -127,6 +127,16 @@ impl<T, const N: usize> Resizable<T, N> {
 		impl_mirrored!(self, list => list.clear());
 	}
 
+	/// Retains only the elements specified by the predicate.
+	pub fn retain(&mut self, f: impl FnMut(&T) -> bool) {
+		impl_mirrored!(self, list => list.retain(f));
+	}
+
+	/// Retains only the elements specified by the predicate, passing a mutable reference to it.
+	pub fn retain_mut(&mut self, f: impl FnMut(&mut T) -> bool) {
+		impl_mirrored!(self, list => list.retain_mut(f));
+	}
+
 	/// Inserts an element at position `index` within the list, shifting all
 	/// elements after it to the right.
 	#[inline]
