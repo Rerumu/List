@@ -28,6 +28,19 @@ impl<T, const N: usize> IntoIter<T, N> {
 
 		Self { start, end, inner }
 	}
+
+	/// Creates an iterator which returns no elements.
+	///
+	/// # Panics
+	///
+	/// Panics if the capacity of the list does not fit within a `u8`.
+	#[inline]
+	#[must_use]
+	pub const fn empty() -> Self {
+		let inner = unsafe { MaybeUninit::uninit().assume_init() };
+
+		unsafe { Self::new_unchecked(inner, 0, 0) }
+	}
 }
 
 impl<T, const N: usize> Iterator for IntoIter<T, N> {
