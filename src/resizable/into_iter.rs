@@ -15,6 +15,15 @@ pub enum IntoIter<T, const N: usize> {
 	Heap(alloc::vec::IntoIter<T>),
 }
 
+impl<T, const N: usize> IntoIter<T, N> {
+	/// Creates an iterator which returns no elements.
+	#[inline]
+	#[must_use]
+	pub const fn empty() -> Self {
+		Self::Fixed(crate::fixed::IntoIter::empty())
+	}
+}
+
 // We have explicit implementations for each method that could be a bottleneck
 // by having repeated calls to `next`. We don't include methods that rely on
 // other methods that are specialized, such as `for_each` which uses `fold`.
