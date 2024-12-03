@@ -226,7 +226,7 @@ impl<T, const N: usize> Fixed<T, N> {
 			list: &'a mut Fixed<T, N>,
 		}
 
-		impl<'a, T, const N: usize> Drop for Guard<'a, T, N> {
+		impl<T, const N: usize> Drop for Guard<'_, T, N> {
 			fn drop(&mut self) {
 				for item in self.iter.by_ref() {
 					// SAFETY: Both arrays have the same capacity.
