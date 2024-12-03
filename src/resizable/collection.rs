@@ -29,7 +29,7 @@ impl<T, const N: usize> Resizable<T, N> {
 		Self::Fixed(Fixed::new())
 	}
 
-	/// Returns the total number of elements the list can hold.
+	/// Constructs a new, empty `Resizable<T, N>` with at least `capacity` capacity.
 	#[inline]
 	#[must_use]
 	pub fn with_capacity(capacity: usize) -> Self {
